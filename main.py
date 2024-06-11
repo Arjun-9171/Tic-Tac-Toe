@@ -1,4 +1,6 @@
 import pygame
+from pygame.locals import *
+
 # from pygame.event import post
 
 
@@ -39,7 +41,7 @@ def draw_markers():
       y_pos += 1
     x_pos += 1	
     
-
+again_rectangle = Rect(screen_width // 2 - 80, screen_height // 2, 160, 50)
 def draw_gameover(winner):
   if winner != 0:
     win_text = "Player " + str(winner) + " wins!"
@@ -47,7 +49,13 @@ def draw_gameover(winner):
     win_text = "The game is a Tie!"
   font = pygame.font.Font(None, 30)
   text = font.render(win_text, True, "black")
-  screen.blit(text, (100, 150))
+  pygame.draw.rect(screen, "blue" , (screen_width // 2 - 100, screen_height // 2 - 60, 200, 50))
+  screen.blit(text, (screen_width // 2 - 75, screen_height // 2 - 50))
+
+  again_text = "Play Again?"
+  again_image = font.render(again_text, True, "black")
+  pygame.draw.rect(screen, "blue", again_rectangle)
+  screen.blit(again_image, (screen_width // 2 - 60, screen_height // 2 + 10))
 
 def check_gameover():
   global game_over
@@ -90,6 +98,7 @@ def check_gameover():
       if tie:
         game_over = True
         winner = 0
+    
   
   
 run = True
@@ -114,7 +123,21 @@ while run:
 
   if game_over == True:
     draw_gameover(winner)
-          
+    if event.type == pygame.MOUSEBUTTONDOWN and clicked == False:
+      clicked = True
+    if event.type == pygame.MOUSEBUTTONUP and clicked == True:
+      clicked = False
+      pos = pygame.mouse.get_pos()
+      if again_rectangle.collidepoint(pos):
+        game_over = False
+        player = 1
+        pos = (0, 0)
+        markers = []
+        winner = 0
+        for x in range(3):
+          row = [0] * 3
+          markers.append(row)
+        
           
           
   pygame.display.update()
